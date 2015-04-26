@@ -42,13 +42,11 @@
                                 (filter alphabet))]
         (partition side (concat distinct-keyword filtered-alphabet))))
 
-(defn codec-index [[[xa ya] [xb yb]]]
-    {:pre [(not (seq (filter #(>= % side) [xa ya xb yb])))]}
-    (letfn [(shift [x] (if (< x (- side 1)) (inc x) 0))]
-        (cond
-            (= xa xb) [[xa (shift ya)] [xb (shift yb)]]
-            (= ya yb) [[(shift xa) ya] [(shift xb) yb]]
-            :else [[xb ya] [xa yb]])))
+(defn codec-index [shiftf [[xa ya] [xb yb]]]
+    (cond
+        (= xa xb) [[xa (shiftf ya)] [xb (shiftf yb)]]
+        (= ya yb) [[(shiftf xa) ya] [(shiftf xb) yb]]
+        :else [[xb ya] [xa yb]]))
 
 (defn find2D [matrix item]
     (for [[y row] (map-indexed vector matrix)
@@ -61,19 +59,35 @@
         (nth y)
         (nth x)))
 
-(defn codec-digraph [key chars]
+(defn codec-digraph [shiftf key chars]
     (->> chars
          (mapv (partial find2D key))
          (mapv first)
-         codec-index
+         (codec-index shiftf)
          (mapv (partial get2D key))))
+
+(defn shift-up [x]
+    (if (< x (dec side))
+        (inc x)
+        0))
+
+(defn shift-down [x]
+    (if (= x 0)
+        (dec side)
+        (dec x)))
 
 (defn encrypt [key message]
     (->> message
          normalize
          digraphs
-         (mapv (partial codec-digraph key))
+         (mapv (partial codec-digraph shift-up key))
          (reduce (partial apply str) "")))
 
 (defn decrypt [key message]
-    nil)
+    (->> message
+         normalize
+         digraphs
+         (map (partial codec-digraph shift-down key))
+         flatten
+         (remove #{default-x-char})
+         (apply str)))

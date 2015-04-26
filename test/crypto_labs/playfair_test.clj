@@ -34,21 +34,22 @@
             [\t \u \v \w \z]])))
 
 (deftest codec-index-tests
-    (testing "In one column"
-        (is (= (codec-index [[3 1] [3 3]])
-               [[3 2] [3 4]])))
-    (testing "In one column, last item"
-        (is (= (codec-index [[2 1] [2 4]])
-               [[2 2] [2 0]])))
-    (testing "In one row"
-        (is (= (codec-index [[1 2] [3 2]])
-               [[2 2] [4 2]])))
-    (testing "In one row, last item"
-        (is (= (codec-index [[2 2] [4 2]])
-               [[3 2] [0 2]])))
-    (testing "Different rows and columns"
-        (is (= (codec-index [[1 1] [3 4]])
-               [[3 1] [1 4]]))))
+    (let [f (partial codec-index shift-up)]
+        (testing "In one column"
+            (is (= (f [[3 1] [3 3]])
+                   [[3 2] [3 4]])))
+        (testing "In one column, last item"
+            (is (= (f [[2 1] [2 4]])
+                   [[2 2] [2 0]])))
+        (testing "In one row"
+            (is (= (f [[1 2] [3 2]])
+                   [[2 2] [4 2]])))
+        (testing "In one row, last item"
+            (is (= (f [[2 2] [4 2]])
+                   [[3 2] [0 2]])))
+        (testing "Different rows and columns"
+            (is (= (f [[1 1] [3 4]])
+                   [[3 1] [1 4]])))))
 
 
 (let [matrix [[1 2 3]
@@ -75,7 +76,7 @@
            [\t \u \v \w \z]]]
       
       (deftest codec-digraph-tests
-          (let [f (partial codec-digraph key)]
+          (let [f (partial codec-digraph shift-up key)]
               (testing "In different cols and rows"
                   (is (= (f [\e \o]) [\x \n])))
               (testing "In the same column"
@@ -89,6 +90,9 @@
       
       (deftest encrypt-tests
           (is (= (encrypt key "Hide the gold in the tree stump")
-                 "bmndzbxdkybejvdmuixmmnuvif"))))
-
+                 "bmndzbxdkybejvdmuixmmnuvif")))
+      
+      (deftest decrypt-tests
+          (is (= (decrypt key "bmndzbxdkybejvdmuixmmnuvif")
+                 "hidethegoldinthetreestump"))))
 
