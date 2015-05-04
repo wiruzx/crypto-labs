@@ -29,14 +29,6 @@
             (.modInverse bn)
             .intValue)))
 
-(t/ann mod-eq [t/Int t/Int t/Int -> t/Bool])
-(defn mod-eq
-  "a ≡ b (mod n)"
-  [a b n]
-  (= (mod (* (mod a n)
-             (mod b n)) n)
-     (mod (* a b) n)))
-
 (t/ann between? [t/Int t/Int t/Int -> t/Bool])
 (defn- between? [from to x]
     (and (< x to) (>= x from)))
@@ -52,7 +44,6 @@
     {:pre [(> to from)]
      :post [(between? from to %)]}
     (+ (rand-int (- to from)) from))
-
 
 (t/ann next-until (t/All [x] [[x -> t/Bool] [ -> x] -> x]))
 (defn next-until
