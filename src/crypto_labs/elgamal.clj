@@ -20,9 +20,13 @@
 
 ;; Public API
 
-(t/ann generate-keys [ -> (t/U nil Keys)])
+(t/ann generate-keys [ -> Keys])
 (defn generate-keys []
-    nil)
+    (let [p (u/random-prime-number 2000 10000)
+          g (u/find-primitive-root p)
+          x (u/random 2 p)
+          y (u/mod-pow g x p)]
+        (Keys. (PublicKey. p g y) x)))
 
 (t/ann sign [Keys t/Int -> Signature])
 (defn sign [{:keys [public private]} m]
