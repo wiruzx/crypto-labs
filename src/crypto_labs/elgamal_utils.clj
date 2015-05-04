@@ -76,6 +76,6 @@
 
 (t/ann generate-session-key [t/Int -> t/Int])
 (defn generate-session-key [p]
-    (let [pred (t/ann-form #(== (gcd % (dec p)) 1) [t/Int -> t/Bool])
-          gen (t/ann-form #(->> p dec (random 2)) [ -> t/Int])]
-        (next-until pred gen)))
+    (next-until (t/fn [x :- t/Int]
+                    (= (gcd x (dec p)) 1))
+                #(random 2 (dec p))))
