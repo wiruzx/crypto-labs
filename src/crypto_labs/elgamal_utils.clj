@@ -38,7 +38,7 @@
      (mod (* a b) n)))
 
 (t/ann between? [t/Int t/Int t/Int -> t/Bool])
-(defn between? [from to x]
+(defn- between? [from to x]
     (and (< x to) (>= x from)))
 
 (t/ann gcd [t/Int t/Int -> t/Int])
