@@ -24,7 +24,7 @@
           (.modPow bb bn)
           .intValue)))
 
-(t/ann ^:no-check mod-inverse [t/Int -> t/Int])
+(t/ann ^:no-check mod-inverse [t/Int t/Int -> t/Int])
 (defn mod-inverse [x n]
     (let [[bx bn] (map biginteger [x n])]
         (-> bx
