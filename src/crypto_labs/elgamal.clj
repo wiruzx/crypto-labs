@@ -39,5 +39,11 @@
         (Signature. r s)))
 
 (t/ann ensure [PublicKey Signature t/Int -> t/Bool])
-(defn ensure [pub-key sign message]
-    false)
+(defn ensure [public sign message]
+    (let [{:keys [p g y]} public
+          {:keys [r s]} sign]
+        (and (< 0 r p)
+             (< 0 s (- p 1))
+             (= (mod (* (u/mod-pow y r p)
+                        (u/mod-pow r s p)) p)
+                (u/mod-pow g message p)))))
