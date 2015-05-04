@@ -71,7 +71,7 @@
      :post [(between? from to %)]}
     (->> (generate-primes)
          (drop-while (t/fn [x :- t/Int] (< x from)))
-         (take-while (t/fn [x :- t/Int] (<= x to)))
+         (take-while (t/fn [x :- t/Int] (< x to)))
          rand-nth))
 
 (t/ann generate-session-key [t/Int -> t/Int])
