@@ -79,3 +79,11 @@
     (next-until (t/fn [x :- t/Int]
                     (= (gcd x (dec p)) 1))
                 #(random 2 (dec p))))
+
+(t/ann find-primitive-root [t/Int -> t/Int])
+(defn find-primitive-root [p]
+    (next-until (t/fn [g :- t/Int]
+                    (and (not= (mod-pow g 2 p) 1)
+                         (not= (mod-pow g (/ (- p 1) 2) p) 1)))
+                #(random 2 p)))
+               
