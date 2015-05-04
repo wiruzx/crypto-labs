@@ -7,10 +7,8 @@
                        (update-in table [(+ prime x)] conj prime))]
         (defn primes-step [table d]
             (if-let [factors (get table d)]
-                (do
-                (t/print-env "primes")
                 (recur (reduce #(reinsert %1 d %2) (dissoc table d) factors)
-                       (inc d)))
+                       (inc d))
                 (lazy-seq (cons d (primes-step (assoc table (* d d) (list d))
                                                (inc d))))))
         (primes-step {} 2)))
@@ -86,4 +84,3 @@
                     (and (not= (mod-pow g 2 p) 1)
                          (not= (mod-pow g (/ (- p 1) 2) p) 1)))
                 #(random 2 p)))
-               
