@@ -50,17 +50,15 @@
     {:pre [(> to from)]
      :post [(between? from to %)]}
     (->> (generate-primes)
-         (drop-while (t/fn [x :- t/Int] (< x from)))
-         (take-while (t/fn [x :- t/Int] (< x to)))
+         (drop-while #(< % from))
+         (take-while #(< % to))
          rand-nth))
 
 (defn generate-session-key [p]
-    (next-until (fn [x]
-                    (= (gcd x (dec p)) 1))
+    (next-until #(= (gcd % (dec p)) 1)
                 #(random 2 (dec p))))
 
 (defn find-primitive-root [p]
-    (next-until (fn [g]
-                    (and (not= (mod-pow g 2 p) 1)
-                         (not= (mod-pow g (/ (- p 1) 2) p) 1)))
+    (next-until #(and (not= (mod-pow % 2 p) 1)
+                      (not= (mod-pow % (/ (- p 1) 2) p) 1))
                 #(random 2 p)))
