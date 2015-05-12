@@ -2,7 +2,6 @@
 
 1. Playfair cipher
 2. ElGamal digital signature
-3. 3-way
 
 ## License
 
